@@ -310,4 +310,13 @@ class SegmentTest extends TestCase
 
         $this->assertEquals($subsegment3, $segment->getCurrentSegment());
     }
+
+    public function testAwsDataMissing(): void
+    {
+        $segment = new Segment();
+
+        $serialised = $segment->jsonSerialize();
+
+        $this->assertNotContains('aws', $serialised);
+    }
 }

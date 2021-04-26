@@ -216,8 +216,8 @@ class Segment implements JsonSerializable
 
     protected function serialiseAwsData(): array
     {
-        return [
+        return array_filter([
             'account_id' => $this->awsAccountId,
-        ];
+        ]);
     }
 }
