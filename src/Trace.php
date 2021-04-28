@@ -92,8 +92,9 @@ class Trace extends Segment
         return $this;
     }
 
-    public function resetTraceId(): self
+    public function resetTrace(): self
     {
+        $this->id = bin2hex(random_bytes(8));
         $this->traceId = null;
 
         return $this;
