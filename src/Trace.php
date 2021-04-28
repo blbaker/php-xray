@@ -92,6 +92,13 @@ class Trace extends Segment
         return $this;
     }
 
+    public function resetTraceId(): self
+    {
+        $this->traceId = null;
+
+        return $this;
+    }
+
     /**
      * @inheritdoc
      */
