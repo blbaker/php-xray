@@ -6,7 +6,7 @@ namespace Pkerrigan\Xray;
 
 class SqsSegment extends RemoteSegment
 {
-    protected ?string $queueUrl;
+    protected ?string $queueUrl = null;
 
     public function jsonSerialize(): array
     {

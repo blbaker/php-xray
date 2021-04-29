@@ -23,7 +23,7 @@ class Segment implements JsonSerializable
 
     protected ?string $traceId = null;
 
-    protected ?string $name;
+    protected ?string $name = null;
 
     protected ?float $startTime = null;
 
