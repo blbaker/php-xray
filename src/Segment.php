@@ -192,6 +192,27 @@ class Segment implements JsonSerializable
         return $this;
     }
 
+    public function getParentId(): string
+    {
+        return $this->parentId;
+    }
+
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return Segment[]
+     */
+    public function getSubsegments(): array
+    {
+        return $this->subsegments;
+    }
+
     /**
      * @inheritdoc
      */

@@ -16,6 +16,7 @@ class Trace extends Segment
     private static $instance;
     private ?string $serviceVersion = null;
     private ?string $user = null;
+    private bool $standalone = false;
 
     public static function getInstance(): self
     {
@@ -43,7 +44,7 @@ class Trace extends Segment
         if (isset($variables['Root'])) {
             $this->setTraceId($variables['Root']);
         }
-        $this->setSampled((bool) ($variables['Sampled'] ?? false));
+        $this->setSampled((bool)($variables['Sampled'] ?? false));
         $this->setParentId($variables['Parent'] ?? null);
 
         return $this;
@@ -120,5 +121,17 @@ class Trace extends Segment
         $uuid = bin2hex(random_bytes(12));
 
         $this->setTraceId("1-{$startHex}-{$uuid}");
+    }
+
+    public function isStandalone(): bool
+    {
+        return $this->standalone;
+    }
+
+    public function setStandalone(bool $standalone): self
+    {
+        $this->standalone = $standalone;
+
+        return $this;
     }
 }
