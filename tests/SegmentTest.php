@@ -155,6 +155,49 @@ class SegmentTest extends TestCase
         );
     }
 
+    public function testNotGivenExceptionSerialisesCorrectly(): void
+    {
+        $segment = new Segment();
+
+        $serialised = $segment->jsonSerialize();
+
+        $this->assertArrayNotHasKey('cause', $serialised);
+    }
+
+    public function testGivenExceptionSerialisesCorrectly(): void
+    {
+        $previousException = new \Exception('test');
+        $exception1 = new \Exception('test1', 1, $previousException);
+        $exception2 = new \Exception('test2', 2);
+        $segment = new Segment();
+        $segment->addException($exception1);
+        $segment->addException($exception2);
+
+        $serialised = $segment->jsonSerialize();
+
+        $this->assertArrayHasKey('working_directory', $serialised['cause']);
+        $this->assertArrayHasKey('exceptions', $serialised['cause']);
+        $this->assertCount(3, $serialised['cause']['exceptions']);
+
+        $this->assertEquals(bin2hex(spl_object_hash($exception1)), $serialised['cause']['exceptions'][0]['id']);
+        $this->assertEquals('test1', $serialised['cause']['exceptions'][0]['message']);
+        $this->assertEquals('Exception', $serialised['cause']['exceptions'][0]['type']);
+        $this->assertEquals(bin2hex(spl_object_hash($previousException)), $serialised['cause']['exceptions'][0]['cause']);
+        $this->assertArrayHasKey('stack', $serialised['cause']['exceptions'][0]);
+
+        $this->assertEquals(bin2hex(spl_object_hash($previousException)), $serialised['cause']['exceptions'][1]['id']);
+        $this->assertEquals('test', $serialised['cause']['exceptions'][1]['message']);
+        $this->assertEquals('Exception', $serialised['cause']['exceptions'][1]['type']);
+        $this->assertArrayNotHasKey('cause', $serialised['cause']['exceptions'][1]);
+        $this->assertArrayHasKey('stack', $serialised['cause']['exceptions'][1]);
+
+        $this->assertEquals(bin2hex(spl_object_hash($exception2)), $serialised['cause']['exceptions'][2]['id']);
+        $this->assertEquals('test2', $serialised['cause']['exceptions'][2]['message']);
+        $this->assertEquals('Exception', $serialised['cause']['exceptions'][2]['type']);
+        $this->assertArrayNotHasKey('cause', $serialised['cause']['exceptions'][2]);
+        $this->assertArrayHasKey('stack', $serialised['cause']['exceptions'][2]);
+    }
+
     public function testAddingSubsegmentToClosedSegmentFails(): void
     {
         $segment = new Segment();

@@ -14,6 +14,8 @@ use Pkerrigan\Xray\Submission\SegmentSubmitter;
  */
 class Segment implements JsonSerializable
 {
+    use ExceptionTrait;
+
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
@@ -232,6 +234,7 @@ class Segment implements JsonSerializable
             'annotations' => empty($this->annotations) ? null : $this->annotations,
             'metadata' => empty($this->metadata) ? null : $this->metadata,
             'aws' => $this->serialiseAwsData(),
+            'cause' => $this->serialiseExceptionData(),
         ]);
     }
 
