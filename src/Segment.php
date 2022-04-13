@@ -39,6 +39,8 @@ class Segment implements JsonSerializable
 
     protected bool $fault = false;
 
+    protected bool $throttle = false;
+
     protected bool $sampled = false;
 
     protected bool $independent = false;
@@ -89,6 +91,13 @@ class Segment implements JsonSerializable
     public function setFault(bool $fault): self
     {
         $this->fault = $fault;
+
+        return $this;
+    }
+
+    public function setThrottle(bool $throttle): self
+    {
+        $this->throttle = $throttle;
 
         return $this;
     }
@@ -231,6 +240,7 @@ class Segment implements JsonSerializable
             'type' => $this->independent ? 'subsegment' : null,
             'fault' => $this->fault,
             'error' => $this->error,
+            'throttle' => $this->throttle,
             'annotations' => empty($this->annotations) ? null : $this->annotations,
             'metadata' => empty($this->metadata) ? null : $this->metadata,
             'aws' => $this->serialiseAwsData(),
