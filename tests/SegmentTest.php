@@ -32,6 +32,7 @@ class SegmentTest extends TestCase
         $this->assertNotNull($serialised['end_time']);
         $this->assertArrayNotHasKey('fault', $serialised);
         $this->assertArrayNotHasKey('error', $serialised);
+        $this->assertArrayNotHasKey('throttle', $serialised);
         $this->assertArrayNotHasKey('subsegments', $serialised);
     }
 
@@ -53,6 +54,7 @@ class SegmentTest extends TestCase
         $this->assertNotNull($serialised['start_time']);
         $this->assertNotNull($serialised['end_time']);
         $this->assertArrayNotHasKey('fault', $serialised);
+        $this->assertArrayNotHasKey('throttle', $serialised);
         $this->assertArrayNotHasKey('subsegments', $serialised);
     }
 
@@ -74,6 +76,29 @@ class SegmentTest extends TestCase
         $this->assertNotNull($serialised['start_time']);
         $this->assertNotNull($serialised['end_time']);
         $this->assertArrayNotHasKey('error', $serialised);
+        $this->assertArrayNotHasKey('throttle', $serialised);
+        $this->assertArrayNotHasKey('subsegments', $serialised);
+    }
+
+    public function testSegmentWithThrottleSerialisesCorrectly(): void
+    {
+        $segment = new Segment();
+
+        $segment->setName('Test segment')
+            ->setParentId('123')
+            ->begin()
+            ->end()
+            ->setThrottle(true);
+
+        $serialised = $segment->jsonSerialize();
+
+        $this->assertEquals($segment->getId(), $serialised['id']);
+        $this->assertEquals('Test segment', $serialised['name']);
+        $this->assertTrue($serialised['throttle']);
+        $this->assertNotNull($serialised['start_time']);
+        $this->assertNotNull($serialised['end_time']);
+        $this->assertArrayNotHasKey('error', $serialised);
+        $this->assertArrayNotHasKey('fault', $serialised);
         $this->assertArrayNotHasKey('subsegments', $serialised);
     }
 
