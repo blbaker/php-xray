@@ -56,8 +56,8 @@ trait ExceptionTrait
     private function serializeStacktrace(\Throwable $throwable): array
     {
         return array_map(fn(array $stackElement): array => array_filter([
-            'path' => $stackElement['file'],
-            'line' => $stackElement['line'],
+            'path' => $stackElement['file'] ?? '',
+            'line' => $stackElement['line'] ?? '',
             'label' => ($stackElement['class'] ?? '').($stackElement['type'] ?? '').$stackElement['function'],
         ]), $throwable->getTrace());
     }
