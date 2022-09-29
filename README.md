@@ -27,7 +27,7 @@ You should start a trace as early as possible in your request:
 use Pkerrigan\Xray\Trace;
 
 Trace::getInstance()
-    ->setTraceHeader($_SERVER['HTTP_X_AMZN_TRACE_ID'] ?? null)
+    ->setTraceHeader(isset($_SERVER['HTTP_X_AMZN_TRACE_ID']) ? $_SERVER['HTTP_X_AMZN_TRACE_ID'] : null)
     ->setName('app.example.com')
     ->setUrl($_SERVER['REQUEST_URI'])
     ->setMethod($_SERVER['REQUEST_METHOD'])

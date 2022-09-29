@@ -33,7 +33,7 @@ class DaemonSegmentSubmitter implements SegmentSubmitter
      */
     private $socket;
 
-    public function __construct(string $host = '127.0.0.1', int $port = 2000)
+    public function __construct($host = '127.0.0.1', $port = 2000)
     {
         $this->host = $host;
         $this->port = $port;
@@ -66,7 +66,7 @@ class DaemonSegmentSubmitter implements SegmentSubmitter
      * @param Segment|array $segment
      * @return string
      */
-    private function buildPacket($segment): string
+    private function buildPacket($segment)
     {
         return implode("\n", array_map('json_encode', [self::HEADER, $segment]));
     }
@@ -75,7 +75,7 @@ class DaemonSegmentSubmitter implements SegmentSubmitter
      * @param string $packet
      * @return void
      */
-    private function sendPacket(string $packet)
+    private function sendPacket($packet)
     {
         socket_sendto($this->socket, $packet, strlen($packet), 0, $this->host, $this->port);
     }
@@ -88,15 +88,15 @@ class DaemonSegmentSubmitter implements SegmentSubmitter
     {
         $rawSegment = $segment->jsonSerialize();
         /** @var Segment[] $subsegments */
-        $subsegments = $rawSegment['subsegments'] ?? [];
+        $subsegments = isset($rawSegment['subsegments']) ? $rawSegment['subsegments'] : [];
         unset($rawSegment['subsegments']);
         $this->submitOpenSegment($rawSegment);
 
         foreach ($subsegments as $subsegment) {
             $subsegment = clone $subsegment;
             $subsegment->setParentId($segment->getId())
-                       ->setTraceId($segment->getTraceId())
-                       ->setIndependent(true);
+                ->setTraceId($segment->getTraceId())
+                ->setIndependent(true);
             $this->submitSegment($subsegment);
         }
 
